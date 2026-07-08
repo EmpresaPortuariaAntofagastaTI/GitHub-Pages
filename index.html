@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>SIGV QR Test</title>
+
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+      border: 1px solid #e2e8f0;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #0f172a;
+      font-size: 28px;
+    }
+
+    p {
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-right: 8px;
+      margin-top: 8px;
+    }
+
+    .primary {
+      background: #1d4ed8;
+      color: white;
+    }
+
+    .secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .danger {
+      background: #dc2626;
+      color: white;
+    }
+
+    #reader {
+      margin-top: 20px;
+      width: 100%;
+      min-height: 280px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      margin-top: 12px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      padding: 12px;
+      font-size: 14px;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+
+    .status {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #e0f2fe;
+      color: #075985;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>SIGV — Prueba lectura QR</h1>
+
+      <p>
+        Esta página es solo una prueba técnica para validar cámara y lectura QR desde una página HTTPS externa.
+        No guarda ni envía datos.
+      </p>
+
+      <button class="primary" onclick="iniciarScanner()">Activar cámara</button>
+      <button class="danger" onclick="detenerScanner()">Detener cámara</button>
+      <button class="secondary" onclick="copiarResultado()">Copiar resultado</button>
+
+      <div id="estado" class="status warning">
+        Cámara pendiente de iniciar.
+      </div>
+
+      <div id="reader"></div>
+
+      <h3>Resultado leído</h3>
+      <textarea id="resultadoQr" readonly placeholder="Aquí aparecerá el contenido leído desde el QR."></textarea>
+    </div>
+  </div>
+
+  <script>
+    let scanner = null;
+    let scannerActivo = false;
+
+    function setEstado(texto, tipo) {
+      const estado = document.getElementById('estado');
+      estado.textContent = texto;
+      estado.className = 'status ' + (tipo || '');
+    }
+
+    function iniciarScanner() {
+      if (scannerActivo) {
+        setEstado('La cámara ya está activa.', 'warning');
+        return;
+      }
+
+      if (!window.Html5Qrcode) {
+        setEstado('No se cargó la librería html5-qrcode.', 'error');
+        return;
+      }
+
+      scanner = new Html5Qrcode('reader');
+
+      const config = {
+        fps: 10,
+        qrbox: {
+          width: 260,
+          height: 260
+        },
+        rememberLastUsedCamera: true
+      };
+
+      scanner.start(
+        { facingMode: 'environment' },
+        config,
+        function(decodedText) {
+          document.getElementById('resultadoQr').value = decodedText;
+          setEstado('QR leído correctamente.', 'success');
+        },
+        function(errorMessage) {
+          // Error normal mientras intenta enfocar. No se muestra.
+        }
+      ).then(function() {
+        scannerActivo = true;
+        setEstado('Cámara activa. Apunte al QR.', '');
+      }).catch(function(error) {
+        scannerActivo = false;
+        setEstado('Error al iniciar cámara: ' + error, 'error');
+      });
+    }
+
+    function detenerScanner() {
+      if (!scanner || !scannerActivo) {
+        setEstado('La cámara no está activa.', 'warning');
+        return;
+      }
+
+      scanner.stop().then(function() {
+        scannerActivo = false;
+        setEstado('Cámara detenida.', 'warning');
+      }).catch(function(error) {
+        setEstado('Error al detener cámara: ' + error, 'error');
+      });
+    }
+
+    function copiarResultado() {
+      const texto = document.getElementById('resultadoQr').value;
+
+      if (!texto) {
+        setEstado('No hay resultado para copiar.', 'warning');
+        return;
+      }
+
+      navigator.clipboard.writeText(texto).then(function() {
+        setEstado('Resultado copiado al portapapeles.', 'success');
+      }).catch(function() {
+        setEstado('No se pudo copiar automáticamente. Copie el texto manualmente.', 'warning');
+      });
+    }
+  </script>
+</body>
+</html>
