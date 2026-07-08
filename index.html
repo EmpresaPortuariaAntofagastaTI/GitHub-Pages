@@ -164,12 +164,17 @@
       scanner = new Html5Qrcode('reader');
 
       const config = {
-        fps: 10,
+        fps: 15,
         qrbox: {
-          width: 260,
-          height: 260
+          width: 340,
+          height: 170
         },
-        rememberLastUsedCamera: true
+        aspectRatio: 1.7777778,
+        rememberLastUsedCamera: true,
+        formatsToSupport: [
+          Html5QrcodeSupportedFormats.QR_CODE,
+          Html5QrcodeSupportedFormats.PDF_417
+        ]
       };
 
       scanner.start(
