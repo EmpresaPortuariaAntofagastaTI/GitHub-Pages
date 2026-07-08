@@ -129,6 +129,15 @@
       <button class="danger" onclick="detenerScanner()">Detener cámara</button>
       <button class="secondary" onclick="copiarResultado()">Copiar resultado</button>
 
+      <hr style="margin: 22px 0; border: none; border-top: 1px solid #e2e8f0;" />
+
+      <h3>Prueba desde foto</h3>
+      <p>
+        Si la cámara en vivo no enfoca bien, tome una foto nítida del código y súbala aquí para probar lectura desde imagen.
+      </p>
+      
+      <input id="archivoQr" type="file" accept="image/*" onchange="leerDesdeArchivo()" />
+
       <div id="estado" class="status warning">
         Cámara pendiente de iniciar.
       </div>
@@ -223,6 +232,28 @@
       }).catch(function() {
         setEstado('No se pudo copiar automáticamente. Copie el texto manualmente.', 'warning');
       });
+    }
+
+        function leerDesdeArchivo() {
+      const input = document.getElementById('archivoQr');
+    
+      if (!input || !input.files || input.files.length === 0) {
+        setEstado('Seleccione una imagen para leer.', 'warning');
+        return;
+      }
+    
+      const archivo = input.files[0];
+    
+      const scannerArchivo = new Html5Qrcode('reader');
+    
+      scannerArchivo.scanFile(archivo, true)
+        .then(function(decodedText) {
+          document.getElementById('resultadoQr').value = decodedText;
+          setEstado('Código leído correctamente desde imagen.', 'success');
+        })
+        .catch(function(error) {
+          setEstado('No se pudo leer el código desde la imagen: ' + error, 'error');
+        });
     }
   </script>
 </body>
