@@ -284,10 +284,14 @@
           onchange="seleccionarYLeerImagen('archivoGaleria')"
         />
 
+        <button class="btn primary" onclick="enviarDatosASIGV()">
+          Enviar a SIGV
+        </button>
+        
         <button class="btn secondary" onclick="copiarDatos()">
           Copiar datos
         </button>
-
+        
         <button class="btn danger" onclick="limpiarTodo()">
           Limpiar
         </button>
@@ -589,6 +593,38 @@
 
       setEstado('Seleccione una imagen para comenzar.', '');
     }
+
+    function enviarDatosASIGV() {
+  if (!datosLeidos.run) {
+    setEstado('No hay RUN para enviar a SIGV.', 'error');
+    return;
+  }
+
+  const payload = {
+    tipo: 'SIGV_QR_RESULTADO',
+    origen: 'GITHUB_PAGES_QR',
+    run: datosLeidos.run || '',
+    nombreCompleto: datosLeidos.nombreCompleto || '',
+    primerNombre: datosLeidos.primerNombre || '',
+    segundoNombre: datosLeidos.segundoNombre || '',
+    primerApellido: datosLeidos.primerApellido || '',
+    segundoApellido: datosLeidos.segundoApellido || '',
+    qrRaw: datosLeidos.qrRaw || ''
+  };
+
+  if (window.opener && !window.opener.closed) {
+    window.opener.postMessage(payload, '*');
+    setEstado('Datos enviados a SIGV. Puede volver al sistema.', 'success');
+
+    setTimeout(function () {
+      window.close();
+    }, 900);
+
+    return;
+  }
+
+  setEstado('No se encontró una ventana SIGV abierta. Use “Copiar datos” o abra esta página desde SIGV.', 'error');
+}
   </script>
 </body>
 </html>
