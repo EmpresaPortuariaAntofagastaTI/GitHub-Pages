@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>SIGV QR + OCR Test</title>
+  <title>SIGV — Prueba QR / OCR</title>
 
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -18,7 +18,7 @@
     }
 
     .container {
-      max-width: 820px;
+      max-width: 840px;
       margin: 0 auto;
       padding: 24px;
     }
@@ -33,7 +33,6 @@
 
     h1 {
       margin-top: 0;
-      color: #0f172a;
       font-size: 28px;
     }
 
@@ -68,46 +67,18 @@
       color: #0f172a;
     }
 
-    .danger {
-      background: #dc2626;
-      color: white;
-    }
-
     .success-button {
       background: #16a34a;
       color: white;
     }
 
+    .danger {
+      background: #dc2626;
+      color: white;
+    }
+
     input[type="file"] {
       display: none;
-    }
-
-    #reader {
-      margin-top: 20px;
-      width: 100%;
-      min-height: 180px;
-      border: 2px dashed #cbd5e1;
-      border-radius: 16px;
-      overflow: hidden;
-      background: #f8fafc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #64748b;
-      font-size: 14px;
-      text-align: center;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 140px;
-      margin-top: 12px;
-      border-radius: 12px;
-      border: 1px solid #cbd5e1;
-      padding: 12px;
-      font-size: 14px;
-      box-sizing: border-box;
-      resize: vertical;
     }
 
     .status {
@@ -135,6 +106,37 @@
       color: #991b1b;
     }
 
+    .hint {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .divider {
+      margin: 24px 0;
+      border: none;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .preview {
+      margin-top: 18px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 16px;
+      background: #f8fafc;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .preview img {
+      max-width: 100%;
+      max-height: 440px;
+      border-radius: 12px;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -145,7 +147,7 @@
     .dato {
       border: 1px solid #e2e8f0;
       border-radius: 14px;
-      padding: 12px;
+      padding: 14px;
       background: #f8fafc;
     }
 
@@ -161,53 +163,50 @@
 
     .dato span {
       display: block;
-      font-size: 15px;
+      font-size: 17px;
       font-weight: bold;
       color: #0f172a;
       word-break: break-word;
     }
 
     .origen {
-      margin-top: 4px;
+      margin-top: 6px;
       font-size: 11px;
       color: #2563eb;
       font-weight: bold;
     }
 
-    .preview {
-      margin-top: 18px;
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      margin-top: 12px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      padding: 12px;
+      font-size: 14px;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+
+    #reader {
+      margin-top: 20px;
+      width: 100%;
+      min-height: 120px;
       border: 2px dashed #cbd5e1;
       border-radius: 16px;
+      overflow: hidden;
       background: #f8fafc;
-      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 14px;
       text-align: center;
-    }
-
-    .preview img {
-      max-width: 100%;
-      max-height: 420px;
-      border-radius: 12px;
-    }
-
-    .divider {
-      margin: 24px 0;
-      border: none;
-      border-top: 1px solid #e2e8f0;
     }
 
     .small {
       font-size: 13px;
       color: #64748b;
-    }
-
-    .hint {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1e3a8a;
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 13px;
-      margin-top: 12px;
     }
 
     @media (min-width: 640px) {
@@ -221,47 +220,34 @@
 <body>
   <div class="container">
     <div class="card">
-      <h1>SIGV — Prueba híbrida QR + OCR</h1>
+      <h1>SIGV — Prueba lectura cédula</h1>
 
       <p>
-        Esta página prueba lectura automática de cédula desde imagen.
-        Primero intenta leer QR. Si faltan datos, usa OCR sobre la misma foto.
-        No guarda ni envía datos.
+        Esta prueba busca extraer solamente los datos necesarios para SIGV:
+        <strong>RUN</strong> y <strong>nombre completo</strong>.
       </p>
 
       <div id="estado" class="status warning">
-        Pendiente de lectura.
+        Seleccione una imagen para comenzar.
       </div>
 
       <div class="hint">
-        Recomendación: tomar foto con buena luz, sin reflejo, enfocando la zona del QR y el texto visible del carnet.
+        Frente del carnet: use OCR. Reverso del carnet: use QR. Si no sabe cuál usar, pruebe modo mixto.
       </div>
 
       <hr class="divider" />
 
-      <h3>Tomar foto / subir imagen</h3>
+      <h3>1. Seleccionar imagen</h3>
 
-      <label class="file-label primary" for="archivoQrCamara">
+      <label class="file-label primary" for="archivoCamara">
         Tomar foto
       </label>
-      <input id="archivoQrCamara" type="file" accept="image/*" capture="environment" onchange="procesarImagenHibrida('archivoQrCamara')" />
+      <input id="archivoCamara" type="file" accept="image/*" capture="environment" onchange="seleccionarImagen('archivoCamara')" />
 
-      <label class="file-label secondary" for="archivoQrGaleria">
+      <label class="file-label secondary" for="archivoGaleria">
         Subir imagen
       </label>
-      <input id="archivoQrGaleria" type="file" accept="image/*" onchange="procesarImagenHibrida('archivoQrGaleria')" />
-
-      <button class="secondary" onclick="copiarResultado()">
-        Copiar QR raw
-      </button>
-
-      <button class="secondary" onclick="copiarTextoOCR()">
-        Copiar OCR
-      </button>
-
-      <button class="danger" onclick="limpiarTodo()">
-        Limpiar
-      </button>
+      <input id="archivoGaleria" type="file" accept="image/*" onchange="seleccionarImagen('archivoGaleria')" />
 
       <div class="preview" id="previewImagen">
         <p class="small">La imagen seleccionada aparecerá aquí.</p>
@@ -269,7 +255,31 @@
 
       <hr class="divider" />
 
-      <h3>Datos extraídos</h3>
+      <h3>2. Método de lectura</h3>
+
+      <button class="primary" onclick="procesarSoloQr()">
+        Leer solo QR
+      </button>
+
+      <button class="success-button" onclick="procesarSoloOcr()">
+        Leer solo OCR frontal
+      </button>
+
+      <button class="secondary" onclick="procesarMixto()">
+        Leer QR + OCR
+      </button>
+
+      <button class="secondary" onclick="copiarDatosFinales()">
+        Copiar datos
+      </button>
+
+      <button class="danger" onclick="limpiarTodo()">
+        Limpiar
+      </button>
+
+      <hr class="divider" />
+
+      <h3>3. Resultado para SIGV</h3>
 
       <div class="grid">
         <div class="dato">
@@ -279,25 +289,13 @@
         </div>
 
         <div class="dato">
-          <label>Nombre</label>
+          <label>Nombre completo</label>
           <span id="datoNombre">-</span>
           <div id="origenNombre" class="origen">-</div>
         </div>
-
-        <div class="dato">
-          <label>Tipo documento</label>
-          <span id="datoTipo">-</span>
-          <div id="origenTipo" class="origen">-</div>
-        </div>
-
-        <div class="dato">
-          <label>Serie</label>
-          <span id="datoSerie">-</span>
-          <div id="origenSerie" class="origen">-</div>
-        </div>
       </div>
 
-      <h3 style="margin-top: 24px;">Resultado QR raw</h3>
+      <h3 style="margin-top: 24px;">QR raw</h3>
       <textarea id="resultadoQr" readonly placeholder="Aquí aparecerá el contenido leído desde el QR si existe."></textarea>
 
       <h3 style="margin-top: 24px;">Texto OCR completo</h3>
@@ -310,7 +308,8 @@
   </div>
 
   <script>
-    let ultimoArchivoProcesado = null;
+    let archivoSeleccionado = null;
+    let datosFinales = crearDatosVaciosSIGV();
 
     function setEstado(texto, tipo) {
       const estado = document.getElementById('estado');
@@ -332,61 +331,143 @@
       }
     }
 
-    async function procesarImagenHibrida(inputId) {
+    function crearDatosVaciosSIGV() {
+      return {
+        run: '',
+        nombre: '',
+        origenRun: '',
+        origenNombre: '',
+        qrRaw: '',
+        ocrRaw: ''
+      };
+    }
+
+    function seleccionarImagen(inputId) {
       const input = document.getElementById(inputId);
 
       if (!input || !input.files || input.files.length === 0) {
-        setEstado('Seleccione una imagen para leer.', 'warning');
+        setEstado('Seleccione una imagen válida.', 'warning');
         return;
       }
 
-      const archivo = input.files[0];
-      ultimoArchivoProcesado = archivo;
+      archivoSeleccionado = input.files[0];
+      datosFinales = crearDatosVaciosSIGV();
 
       limpiarResultadosSinPreview();
-      mostrarPreviewImagen(archivo);
+      mostrarPreviewImagen(archivoSeleccionado);
 
-      setEstado('Procesando imagen: intentando QR...', '');
+      setEstado('Imagen cargada. Seleccione método de lectura.', 'success');
+    }
 
-      let datosFinales = crearDatosVaciosSIGV();
+    function validarArchivoSeleccionado() {
+      if (!archivoSeleccionado) {
+        setEstado('Primero debe tomar o subir una imagen.', 'warning');
+        return false;
+      }
+
+      return true;
+    }
+
+    async function procesarSoloQr() {
+      if (!validarArchivoSeleccionado()) return;
+
+      limpiarResultadosSinPreview();
+      datosFinales = crearDatosVaciosSIGV();
+
+      setEstado('Leyendo QR...', '');
 
       try {
-        const qrRaw = await leerQrDesdeArchivoSIGV(archivo);
+        const qrRaw = await leerQrDesdeArchivoSIGV(archivoSeleccionado);
         setValor('resultadoQr', qrRaw);
 
         const datosQr = parsearQrCedulaChilenaSIGV(qrRaw);
         datosFinales = combinarDatosSIGV(datosFinales, datosQr, 'QR');
 
-        setEstado('QR leído. Ejecutando OCR para complementar datos...', 'success');
+        pintarDatosFinales();
+
+        if (datosFinales.run || datosFinales.nombre) {
+          setEstado('Lectura QR finalizada. Revise los datos.', 'success');
+        } else {
+          setEstado('QR leído, pero no se detectó RUN ni nombre.', 'warning');
+        }
+      } catch (error) {
+        console.error(error);
+        setEstado('No se pudo leer QR desde la imagen.', 'error');
+      }
+    }
+
+    async function procesarSoloOcr() {
+      if (!validarArchivoSeleccionado()) return;
+
+      limpiarResultadosSinPreview();
+      datosFinales = crearDatosVaciosSIGV();
+
+      setEstado('Ejecutando OCR frontal...', '');
+
+      try {
+        const textoOcr = await leerOcrDesdeArchivoSIGV(archivoSeleccionado);
+        setValor('resultadoOcr', textoOcr);
+
+        const datosOcr = parsearOcrCedulaFrontalSIGV(textoOcr);
+        datosFinales = combinarDatosSIGV(datosFinales, datosOcr, 'OCR');
+
+        pintarDatosFinales();
+
+        if (datosFinales.run || datosFinales.nombre) {
+          setEstado('OCR finalizado. Revise los datos.', 'success');
+        } else {
+          setEstado('OCR finalizado, pero no detectó RUN ni nombre.', 'warning');
+        }
+      } catch (error) {
+        console.error(error);
+        setEstado('Error ejecutando OCR.', 'error');
+      }
+    }
+
+    async function procesarMixto() {
+      if (!validarArchivoSeleccionado()) return;
+
+      limpiarResultadosSinPreview();
+      datosFinales = crearDatosVaciosSIGV();
+
+      setEstado('Modo mixto: intentando QR...', '');
+
+      try {
+        const qrRaw = await leerQrDesdeArchivoSIGV(archivoSeleccionado);
+        setValor('resultadoQr', qrRaw);
+
+        const datosQr = parsearQrCedulaChilenaSIGV(qrRaw);
+        datosFinales = combinarDatosSIGV(datosFinales, datosQr, 'QR');
+
+        setEstado('QR leído. Ejecutando OCR para complementar...', 'success');
       } catch (errorQr) {
-        console.warn('No se pudo leer QR:', errorQr);
-        setEstado('No se pudo leer QR. Ejecutando OCR...', 'warning');
+        console.warn('QR no leído:', errorQr);
+        setEstado('QR no leído. Ejecutando OCR...', 'warning');
       }
 
       try {
-        const textoOcr = await leerOcrDesdeArchivoSIGV(archivo);
+        const textoOcr = await leerOcrDesdeArchivoSIGV(archivoSeleccionado);
         setValor('resultadoOcr', textoOcr);
 
-        const datosOcr = parsearOcrCedulaChilenaSIGV(textoOcr);
+        const datosOcr = parsearOcrCedulaFrontalSIGV(textoOcr);
         datosFinales = combinarDatosSIGV(datosFinales, datosOcr, 'OCR');
 
-        pintarDatosExtraidos(datosFinales);
+        pintarDatosFinales();
 
         if (datosFinales.run || datosFinales.nombre) {
-          setEstado('Lectura finalizada. Revise los datos extraídos antes de usarlos.', 'success');
+          setEstado('Modo mixto finalizado. Revise los datos.', 'success');
         } else {
-          setEstado('OCR finalizado, pero no se detectaron datos claros. Pruebe con una foto más nítida.', 'warning');
+          setEstado('Modo mixto finalizado, pero no detectó datos claros.', 'warning');
         }
-
       } catch (errorOcr) {
-        console.error('Error OCR:', errorOcr);
+        console.error('OCR falló:', errorOcr);
 
-        pintarDatosExtraidos(datosFinales);
+        pintarDatosFinales();
 
         if (datosFinales.run || datosFinales.nombre) {
-          setEstado('QR leído, pero OCR falló. Revise los datos obtenidos por QR.', 'warning');
+          setEstado('QR leído, pero OCR falló. Revise los datos QR.', 'warning');
         } else {
-          setEstado('No se pudo leer QR ni OCR. Pruebe con mejor foto.', 'error');
+          setEstado('No se pudo leer QR ni OCR.', 'error');
         }
       }
     }
@@ -419,8 +500,6 @@
         throw new Error('No se cargó Tesseract.js.');
       }
 
-      setEstado('OCR cargando modelo, esto puede tardar unos segundos...', '');
-
       const resultado = await Tesseract.recognize(
         archivo,
         'eng',
@@ -439,59 +518,9 @@
         : '';
     }
 
-    function crearDatosVaciosSIGV() {
-      return {
-        run: '',
-        nombre: '',
-        tipo: '',
-        serie: '',
-        mrz: '',
-        raw: '',
-        origenRun: '',
-        origenNombre: '',
-        origenTipo: '',
-        origenSerie: ''
-      };
-    }
-
-    function combinarDatosSIGV(base, nuevos, origen) {
-      base = base || crearDatosVaciosSIGV();
-      nuevos = nuevos || {};
-
-      if (!base.run && nuevos.run) {
-        base.run = normalizarRunSIGV(nuevos.run);
-        base.origenRun = origen;
-      }
-
-      if (!base.nombre && nuevos.nombre) {
-        base.nombre = normalizarNombrePersonaSIGV(nuevos.nombre);
-        base.origenNombre = origen;
-      }
-
-      if (!base.tipo && nuevos.tipo) {
-        base.tipo = nuevos.tipo;
-        base.origenTipo = origen;
-      }
-
-      if (!base.serie && nuevos.serie) {
-        base.serie = nuevos.serie;
-        base.origenSerie = origen;
-      }
-
-      if (!base.mrz && nuevos.mrz) {
-        base.mrz = nuevos.mrz;
-      }
-
-      if (!base.raw && nuevos.raw) {
-        base.raw = nuevos.raw;
-      }
-
-      return base;
-    }
-
     function parsearQrCedulaChilenaSIGV(texto) {
       const resultado = crearDatosVaciosSIGV();
-      resultado.raw = texto || '';
+      resultado.qrRaw = texto || '';
 
       if (!texto) {
         return resultado;
@@ -501,29 +530,25 @@
         const url = new URL(texto);
 
         resultado.run = url.searchParams.get('RUN') || '';
-        resultado.tipo = url.searchParams.get('type') || '';
-        resultado.serie = url.searchParams.get('serial') || '';
-        resultado.mrz = url.searchParams.get('mrz') || '';
         resultado.nombre = url.searchParams.get('name') || '';
 
+        resultado.run = normalizarRunSIGV(resultado.run);
         resultado.nombre = normalizarNombreDesdeQrSIGV(resultado.nombre);
 
         return resultado;
       } catch (error) {
-        // Si no es URL, intentamos rescate básico por texto.
+        // Si no es URL, intenta rescate básico.
       }
 
-      resultado.run = extraerParametroTextoSIGV(texto, 'RUN');
-      resultado.tipo = extraerParametroTextoSIGV(texto, 'type');
-      resultado.serie = extraerParametroTextoSIGV(texto, 'serial');
-      resultado.mrz = extraerParametroTextoSIGV(texto, 'mrz');
+      resultado.run = normalizarRunSIGV(extraerParametroTextoSIGV(texto, 'RUN'));
       resultado.nombre = normalizarNombreDesdeQrSIGV(extraerParametroTextoSIGV(texto, 'name'));
 
       return resultado;
     }
 
-    function parsearOcrCedulaChilenaSIGV(texto) {
+    function parsearOcrCedulaFrontalSIGV(texto) {
       const resultado = crearDatosVaciosSIGV();
+      resultado.ocrRaw = texto || '';
 
       if (!texto) {
         return resultado;
@@ -536,21 +561,9 @@
         .filter(Boolean);
 
       resultado.run = detectarRunEnOcrSIGV(limpio);
-      resultado.serie = detectarSerieEnOcrSIGV(limpio);
-      resultado.tipo = detectarTipoDocumentoOcrSIGV(limpio);
-      resultado.nombre = detectarNombreEnOcrSIGV(lineas, limpio);
+      resultado.nombre = detectarNombreFrontalPorEtiquetasSIGV(lineas);
 
       return resultado;
-    }
-
-    function normalizarTextoOcrSIGV(texto) {
-      return String(texto || '')
-        .replace(/\r/g, '\n')
-        .replace(/[|]/g, 'I')
-        .replace(/[“”]/g, '"')
-        .replace(/[’]/g, "'")
-        .replace(/[ ]{2,}/g, ' ')
-        .trim();
     }
 
     function detectarRunEnOcrSIGV(texto) {
@@ -570,6 +583,174 @@
       return '';
     }
 
+    function detectarNombreFrontalPorEtiquetasSIGV(lineas) {
+      const apellidos = [];
+      const nombres = [];
+
+      for (let i = 0; i < lineas.length; i++) {
+        const lineaOriginal = String(lineas[i] || '').trim();
+        const linea = normalizarLineaOcrSIGV(lineaOriginal);
+
+        if (linea.includes('APELLIDOS') || linea.includes('APELLIDO')) {
+          const candidatos = obtenerLineasPosterioresNombreSIGV(lineas, i, 3);
+          candidatos.forEach(function(c) {
+            if (apellidos.length < 2) apellidos.push(c);
+          });
+        }
+
+        if (linea.includes('NOMBRES') || linea.includes('NOMBRE')) {
+          const candidatos = obtenerLineasPosterioresNombreSIGV(lineas, i, 3);
+          candidatos.forEach(function(c) {
+            if (nombres.length < 2) nombres.push(c);
+          });
+        }
+      }
+
+      let nombreCompleto = '';
+
+      if (nombres.length > 0 || apellidos.length > 0) {
+        nombreCompleto = nombres.concat(apellidos).join(' ');
+      }
+
+      nombreCompleto = normalizarNombrePersonaSIGV(nombreCompleto);
+
+      if (nombreCompleto) {
+        return nombreCompleto;
+      }
+
+      return detectarNombrePorCandidatosSIGV(lineas);
+    }
+
+    function obtenerLineasPosterioresNombreSIGV(lineas, indice, maxLineas) {
+      const resultado = [];
+
+      for (let j = indice + 1; j < lineas.length && resultado.length < maxLineas; j++) {
+        const limpia = limpiarLineaNombreOcrSIGV(lineas[j]);
+
+        if (!limpia) continue;
+        if (esLineaNoNombreSIGV(limpia)) continue;
+
+        resultado.push(limpia);
+      }
+
+      return resultado;
+    }
+
+    function detectarNombrePorCandidatosSIGV(lineas) {
+      const candidatas = lineas
+        .map(limpiarLineaNombreOcrSIGV)
+        .filter(function(linea) {
+          if (!linea) return false;
+          if (esLineaNoNombreSIGV(linea)) return false;
+
+          const palabras = linea.split(/\s+/).filter(Boolean);
+          return palabras.length >= 2 && linea.length >= 8;
+        });
+
+      if (candidatas.length > 0) {
+        return normalizarNombrePersonaSIGV(candidatas[0]);
+      }
+
+      return '';
+    }
+
+    function combinarDatosSIGV(base, nuevos, origen) {
+      base = base || crearDatosVaciosSIGV();
+      nuevos = nuevos || {};
+
+      if (!base.run && nuevos.run) {
+        base.run = normalizarRunSIGV(nuevos.run);
+        base.origenRun = origen;
+      }
+
+      if (!base.nombre && nuevos.nombre) {
+        base.nombre = normalizarNombrePersonaSIGV(nuevos.nombre);
+        base.origenNombre = origen;
+      }
+
+      if (!base.qrRaw && nuevos.qrRaw) {
+        base.qrRaw = nuevos.qrRaw;
+      }
+
+      if (!base.ocrRaw && nuevos.ocrRaw) {
+        base.ocrRaw = nuevos.ocrRaw;
+      }
+
+      return base;
+    }
+
+    function normalizarTextoOcrSIGV(texto) {
+      return String(texto || '')
+        .replace(/\r/g, '\n')
+        .replace(/[|]/g, 'I')
+        .replace(/[“”]/g, '"')
+        .replace(/[’]/g, "'")
+        .replace(/[ ]{2,}/g, ' ')
+        .trim();
+    }
+
+    function normalizarLineaOcrSIGV(linea) {
+      return String(linea || '')
+        .toUpperCase()
+        .replace(/Á/g, 'A')
+        .replace(/É/g, 'E')
+        .replace(/Í/g, 'I')
+        .replace(/Ó/g, 'O')
+        .replace(/Ú/g, 'U')
+        .replace(/Ñ/g, 'N')
+        .trim();
+    }
+
+    function limpiarLineaNombreOcrSIGV(linea) {
+      return String(linea || '')
+        .toUpperCase()
+        .replace(/[^A-ZÁÉÍÓÚÑ ]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function esLineaNoNombreSIGV(linea) {
+      const valor = normalizarLineaOcrSIGV(linea);
+
+      const palabrasBloqueadas = [
+        'REPUBLICA',
+        'CHILE',
+        'CEDULA',
+        'IDENTIDAD',
+        'SERVICIO',
+        'REGISTRO',
+        'CIVIL',
+        'NACIONALIDAD',
+        'NACIO',
+        'NACIMIENTO',
+        'PROFESION',
+        'RUN',
+        'RUT',
+        'DOCUMENTO',
+        'NUMERO',
+        'FECHA',
+        'VENCIMIENTO',
+        'EMISION',
+        'SEXO',
+        'FIRMA',
+        'TITULAR',
+        'CHILENA',
+        'NO INFORMADA',
+        'INCHL',
+        'HTTPS',
+        'PORTAL',
+        'DOCSTATUS'
+      ];
+
+      if (/[0-9]{3,}/.test(valor)) {
+        return true;
+      }
+
+      return palabrasBloqueadas.some(function(palabra) {
+        return valor.includes(palabra);
+      });
+    }
+
     function normalizarRunSIGV(run) {
       let valor = String(run || '').toUpperCase();
       valor = valor.replace(/[^0-9K]/g, '');
@@ -582,156 +763,6 @@
       const dv = valor.slice(-1);
 
       return cuerpo + '-' + dv;
-    }
-
-    function detectarSerieEnOcrSIGV(texto) {
-      const patrones = [
-        /SERIE[:\s]*([A-Z0-9]{6,14})/i,
-        /DOCUMENTO[:\s]*([A-Z0-9]{6,14})/i,
-        /([A-Z][0-9A-Z]{7,12})/
-      ];
-
-      for (const patron of patrones) {
-        const match = texto.match(patron);
-        if (match && match[1]) {
-          return String(match[1]).replace(/[^A-Z0-9]/gi, '').toUpperCase();
-        }
-      }
-
-      return '';
-    }
-
-    function detectarTipoDocumentoOcrSIGV(texto) {
-      const mayus = String(texto || '').toUpperCase();
-
-      if (mayus.includes('CEDULA') || mayus.includes('CÉDULA')) {
-        return 'CEDULA';
-      }
-
-      if (mayus.includes('PASAPORTE')) {
-        return 'PASAPORTE';
-      }
-
-      return '';
-    }
-
-    function detectarNombreEnOcrSIGV(lineas, textoCompleto) {
-      const lineasLimpias = lineas
-        .map(limpiarLineaNombreOcrSIGV)
-        .filter(function(linea) {
-          return linea &&
-            linea.length >= 5 &&
-            !esLineaNoNombreSIGV(linea);
-        });
-
-      // Caso 1: OCR detecta etiqueta NOMBRE / APELLIDOS.
-      const porEtiqueta = detectarNombrePorEtiquetasSIGV(lineas);
-      if (porEtiqueta) {
-        return porEtiqueta;
-      }
-
-      // Caso 2: tomar línea candidata con muchas letras mayúsculas.
-      const candidatas = lineasLimpias.filter(function(linea) {
-        const letras = linea.replace(/[^A-ZÁÉÍÓÚÑ ]/g, '');
-        const palabras = letras.trim().split(/\s+/).filter(Boolean);
-
-        return palabras.length >= 2 && letras.length >= 8;
-      });
-
-      if (candidatas.length > 0) {
-        // Preferimos una línea que no sea ubicación ni profesión.
-        return normalizarNombrePersonaSIGV(candidatas[0]);
-      }
-
-      return '';
-    }
-
-    function detectarNombrePorEtiquetasSIGV(lineas) {
-      const acumulado = [];
-
-      for (let i = 0; i < lineas.length; i++) {
-        const lineaOriginal = String(lineas[i] || '').trim();
-        const linea = lineaOriginal.toUpperCase();
-
-        if (
-          linea.includes('NOMBRES') ||
-          linea.includes('NOMBRE') ||
-          linea.includes('APELLIDOS') ||
-          linea.includes('APELLIDO')
-        ) {
-          const despuesDosPuntos = lineaOriginal.split(':').slice(1).join(':').trim();
-
-          if (despuesDosPuntos && !esLineaNoNombreSIGV(despuesDosPuntos)) {
-            acumulado.push(despuesDosPuntos);
-          }
-
-          if (lineas[i + 1] && !esLineaNoNombreSIGV(lineas[i + 1])) {
-            acumulado.push(lineas[i + 1]);
-          }
-
-          if (lineas[i + 2] && !esLineaNoNombreSIGV(lineas[i + 2])) {
-            acumulado.push(lineas[i + 2]);
-          }
-        }
-      }
-
-      const texto = acumulado
-        .map(limpiarLineaNombreOcrSIGV)
-        .filter(Boolean)
-        .join(' ');
-
-      return normalizarNombrePersonaSIGV(texto);
-    }
-
-    function limpiarLineaNombreOcrSIGV(linea) {
-      return String(linea || '')
-        .toUpperCase()
-        .replace(/[^A-ZÁÉÍÓÚÑ ]/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-    }
-
-    function esLineaNoNombreSIGV(linea) {
-      const valor = String(linea || '').toUpperCase();
-
-      const palabrasBloqueadas = [
-        'REPUBLICA',
-        'REPÚBLICA',
-        'CHILE',
-        'CEDULA',
-        'CÉDULA',
-        'IDENTIDAD',
-        'SERVICIO',
-        'REGISTRO',
-        'CIVIL',
-        'NACIONALIDAD',
-        'NACIO',
-        'NACIÓ',
-        'NACIMIENTO',
-        'PROFESION',
-        'PROFESIÓN',
-        'NO INFORMADA',
-        'RUN',
-        'RUT',
-        'DOCUMENTO',
-        'SERIE',
-        'FECHA',
-        'VENCIMIENTO',
-        'SEXO',
-        'FIRMA',
-        'INCHL',
-        'HTTPS',
-        'PORTAL',
-        'DOCSTATUS'
-      ];
-
-      if (/[0-9]{4,}/.test(valor)) {
-        return true;
-      }
-
-      return palabrasBloqueadas.some(function(palabra) {
-        return valor.includes(palabra);
-      });
     }
 
     function normalizarNombreDesdeQrSIGV(nombre) {
@@ -770,18 +801,45 @@
       }
     }
 
-    function pintarDatosExtraidos(datos) {
-      datos = datos || {};
+    function pintarDatosFinales() {
+      setTexto('datoRun', datosFinales.run || '-');
+      setTexto('datoNombre', datosFinales.nombre || 'No detectado');
 
-      setTexto('datoRun', datos.run || '-');
-      setTexto('datoNombre', datos.nombre || 'No detectado');
-      setTexto('datoTipo', datos.tipo || '-');
-      setTexto('datoSerie', datos.serie || '-');
+      setTexto('origenRun', datosFinales.origenRun ? 'Origen: ' + datosFinales.origenRun : '-');
+      setTexto('origenNombre', datosFinales.origenNombre ? 'Origen: ' + datosFinales.origenNombre : '-');
 
-      setTexto('origenRun', datos.origenRun ? 'Origen: ' + datos.origenRun : '-');
-      setTexto('origenNombre', datos.origenNombre ? 'Origen: ' + datos.origenNombre : '-');
-      setTexto('origenTipo', datos.origenTipo ? 'Origen: ' + datos.origenTipo : '-');
-      setTexto('origenSerie', datos.origenSerie ? 'Origen: ' + datos.origenSerie : '-');
+      setValor('resultadoQr', datosFinales.qrRaw || document.getElementById('resultadoQr').value || '');
+      setValor('resultadoOcr', datosFinales.ocrRaw || document.getElementById('resultadoOcr').value || '');
+    }
+
+    function limpiarResultadosSinPreview() {
+      datosFinales = crearDatosVaciosSIGV();
+
+      setTexto('datoRun', '-');
+      setTexto('datoNombre', '-');
+      setTexto('origenRun', '-');
+      setTexto('origenNombre', '-');
+
+      setValor('resultadoQr', '');
+      setValor('resultadoOcr', '');
+    }
+
+    function limpiarTodo() {
+      archivoSeleccionado = null;
+      limpiarResultadosSinPreview();
+
+      const preview = document.getElementById('previewImagen');
+      if (preview) {
+        preview.innerHTML = '<p class="small">La imagen seleccionada aparecerá aquí.</p>';
+      }
+
+      const inputCamara = document.getElementById('archivoCamara');
+      const inputGaleria = document.getElementById('archivoGaleria');
+
+      if (inputCamara) inputCamara.value = '';
+      if (inputGaleria) inputGaleria.value = '';
+
+      setEstado('Seleccione una imagen para comenzar.', 'warning');
     }
 
     function mostrarPreviewImagen(archivo) {
@@ -800,60 +858,17 @@
       reader.readAsDataURL(archivo);
     }
 
-    function limpiarResultadosSinPreview() {
-      setValor('resultadoQr', '');
-      setValor('resultadoOcr', '');
-
-      pintarDatosExtraidos(crearDatosVaciosSIGV());
-    }
-
-    function limpiarTodo() {
-      setValor('resultadoQr', '');
-      setValor('resultadoOcr', '');
-
-      pintarDatosExtraidos(crearDatosVaciosSIGV());
-
-      const preview = document.getElementById('previewImagen');
-      if (preview) {
-        preview.innerHTML = '<p class="small">La imagen seleccionada aparecerá aquí.</p>';
-      }
-
-      const inputCamara = document.getElementById('archivoQrCamara');
-      const inputGaleria = document.getElementById('archivoQrGaleria');
-
-      if (inputCamara) inputCamara.value = '';
-      if (inputGaleria) inputGaleria.value = '';
-
-      setEstado('Pendiente de lectura.', 'warning');
-    }
-
-    function copiarResultado() {
-      const texto = document.getElementById('resultadoQr').value;
-
-      if (!texto) {
-        setEstado('No hay QR raw para copiar.', 'warning');
-        return;
-      }
+    function copiarDatosFinales() {
+      const texto =
+        'RUN: ' + (datosFinales.run || '') + '\n' +
+        'Nombre: ' + (datosFinales.nombre || '') + '\n' +
+        'Origen RUN: ' + (datosFinales.origenRun || '') + '\n' +
+        'Origen Nombre: ' + (datosFinales.origenNombre || '');
 
       navigator.clipboard.writeText(texto).then(function() {
-        setEstado('QR raw copiado al portapapeles.', 'success');
+        setEstado('Datos copiados al portapapeles.', 'success');
       }).catch(function() {
-        setEstado('No se pudo copiar automáticamente. Copie el texto manualmente.', 'warning');
-      });
-    }
-
-    function copiarTextoOCR() {
-      const texto = document.getElementById('resultadoOcr').value;
-
-      if (!texto) {
-        setEstado('No hay texto OCR para copiar.', 'warning');
-        return;
-      }
-
-      navigator.clipboard.writeText(texto).then(function() {
-        setEstado('Texto OCR copiado al portapapeles.', 'success');
-      }).catch(function() {
-        setEstado('No se pudo copiar automáticamente. Copie el texto OCR manualmente.', 'warning');
+        setEstado('No se pudo copiar automáticamente.', 'warning');
       });
     }
   </script>
