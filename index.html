@@ -17,7 +17,7 @@
     }
 
     .container {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
       padding: 24px;
     }
@@ -36,12 +36,16 @@
       font-size: 28px;
     }
 
+    h3 {
+      margin-bottom: 8px;
+    }
+
     p {
       color: #475569;
       line-height: 1.5;
     }
 
-    button {
+    button, .file-label {
       border: none;
       border-radius: 12px;
       padding: 12px 18px;
@@ -49,6 +53,8 @@
       cursor: pointer;
       margin-right: 8px;
       margin-top: 8px;
+      display: inline-block;
+      font-size: 14px;
     }
 
     .primary {
@@ -66,19 +72,34 @@
       color: white;
     }
 
+    .success-button {
+      background: #16a34a;
+      color: white;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
     #reader {
       margin-top: 20px;
       width: 100%;
-      min-height: 280px;
+      min-height: 260px;
       border: 2px dashed #cbd5e1;
       border-radius: 16px;
       overflow: hidden;
       background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 14px;
+      text-align: center;
     }
 
     textarea {
       width: 100%;
-      min-height: 160px;
+      min-height: 150px;
       margin-top: 12px;
       border-radius: 12px;
       border: 1px solid #cbd5e1;
@@ -112,6 +133,70 @@
       background: #fee2e2;
       color: #991b1b;
     }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .dato {
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 12px;
+      background: #f8fafc;
+    }
+
+    .dato label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .dato span {
+      display: block;
+      font-size: 15px;
+      font-weight: bold;
+      color: #0f172a;
+      word-break: break-word;
+    }
+
+    .preview {
+      margin-top: 18px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 16px;
+      background: #f8fafc;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .preview img {
+      max-width: 100%;
+      max-height: 360px;
+      border-radius: 12px;
+    }
+
+    .divider {
+      margin: 24px 0;
+      border: none;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    @media (min-width: 640px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -121,102 +206,234 @@
       <h1>SIGV — Prueba lectura QR</h1>
 
       <p>
-        Esta página es solo una prueba técnica para validar cámara y lectura QR desde una página HTTPS externa.
+        Esta página es una prueba técnica para validar lectura de cédula desde imagen.
         No guarda ni envía datos.
       </p>
 
-      <button class="primary" onclick="iniciarScanner()">Activar cámara</button>
-      <button class="danger" onclick="detenerScanner()">Detener cámara</button>
-      <button class="secondary" onclick="copiarResultado()">Copiar resultado</button>
-
-      <hr style="margin: 22px 0; border: none; border-top: 1px solid #e2e8f0;" />
-
-      <h3>Prueba desde foto</h3>
-      <p>
-        Si la cámara en vivo no enfoca bien, tome una foto nítida del código y súbala aquí para probar lectura desde imagen.
-      </p>
-      
-      <input id="archivoQr" type="file" accept="image/*" onchange="leerDesdeArchivo()" />
-
       <div id="estado" class="status warning">
-        Cámara pendiente de iniciar.
+        Pendiente de lectura.
       </div>
 
-      <div id="reader"></div>
+      <hr class="divider" />
 
-      <h3>Resultado leído</h3>
-      <textarea id="resultadoQr" readonly placeholder="Aquí aparecerá el contenido leído desde el QR."></textarea>
+      <h3>Tomar foto / subir imagen</h3>
+      <p>
+        Use la cámara del teléfono para tomar una foto nítida del código o seleccione una imagen ya tomada.
+      </p>
+
+      <label class="file-label primary" for="archivoQrCamara">
+        Tomar foto
+      </label>
+      <input id="archivoQrCamara" type="file" accept="image/*" capture="environment" onchange="leerDesdeArchivo('archivoQrCamara')" />
+
+      <label class="file-label secondary" for="archivoQrGaleria">
+        Subir imagen
+      </label>
+      <input id="archivoQrGaleria" type="file" accept="image/*" onchange="leerDesdeArchivo('archivoQrGaleria')" />
+
+      <button class="secondary" onclick="copiarResultado()">
+        Copiar QR raw
+      </button>
+
+      <button class="danger" onclick="limpiarTodo()">
+        Limpiar
+      </button>
+
+      <div class="preview" id="previewImagen">
+        <p class="small">La imagen seleccionada aparecerá aquí.</p>
+      </div>
+
+      <hr class="divider" />
+
+      <h3>Datos extraídos</h3>
+
+      <div class="grid">
+        <div class="dato">
+          <label>RUN</label>
+          <span id="datoRun">-</span>
+        </div>
+
+        <div class="dato">
+          <label>Nombre</label>
+          <span id="datoNombre">-</span>
+        </div>
+
+        <div class="dato">
+          <label>Tipo documento</label>
+          <span id="datoTipo">-</span>
+        </div>
+
+        <div class="dato">
+          <label>Serie</label>
+          <span id="datoSerie">-</span>
+        </div>
+      </div>
+
+      <h3 style="margin-top: 24px;">Resultado leído / QR raw</h3>
+      <textarea id="resultadoQr" readonly placeholder="Aquí aparecerá el contenido leído desde el código."></textarea>
+
+      <div id="reader">
+        Scanner disponible para lectura desde archivo.
+      </div>
     </div>
   </div>
 
   <script>
-    let scanner = null;
-    let scannerActivo = false;
-
     function setEstado(texto, tipo) {
       const estado = document.getElementById('estado');
       estado.textContent = texto;
       estado.className = 'status ' + (tipo || '');
     }
 
-    function iniciarScanner() {
-      if (scannerActivo) {
-        setEstado('La cámara ya está activa.', 'warning');
+    function setTexto(id, valor) {
+      const elemento = document.getElementById(id);
+      if (elemento) {
+        elemento.textContent = valor || '-';
+      }
+    }
+
+    function setValor(id, valor) {
+      const elemento = document.getElementById(id);
+      if (elemento) {
+        elemento.value = valor || '';
+      }
+    }
+
+    function leerDesdeArchivo(inputId) {
+      const input = document.getElementById(inputId);
+
+      if (!input || !input.files || input.files.length === 0) {
+        setEstado('Seleccione una imagen para leer.', 'warning');
         return;
       }
+
+      const archivo = input.files[0];
+
+      mostrarPreviewImagen(archivo);
 
       if (!window.Html5Qrcode) {
         setEstado('No se cargó la librería html5-qrcode.', 'error');
         return;
       }
 
-      scanner = new Html5Qrcode('reader');
+      setEstado('Procesando imagen, espere unos segundos...', '');
 
-      const config = {
-        fps: 15,
-        qrbox: {
-          width: 340,
-          height: 170
-        },
-        aspectRatio: 1.7777778,
-        rememberLastUsedCamera: true,
-        formatsToSupport: [
-          Html5QrcodeSupportedFormats.QR_CODE,
-          Html5QrcodeSupportedFormats.PDF_417
-        ]
-      };
+      const scannerArchivo = new Html5Qrcode('reader');
 
-      scanner.start(
-        { facingMode: 'environment' },
-        config,
-        function(decodedText) {
-          document.getElementById('resultadoQr').value = decodedText;
-          setEstado('QR leído correctamente.', 'success');
-        },
-        function(errorMessage) {
-          // Error normal mientras intenta enfocar. No se muestra.
-        }
-      ).then(function() {
-        scannerActivo = true;
-        setEstado('Cámara activa. Apunte al QR.', '');
-      }).catch(function(error) {
-        scannerActivo = false;
-        setEstado('Error al iniciar cámara: ' + error, 'error');
-      });
+      scannerArchivo.scanFile(archivo, true)
+        .then(function(decodedText) {
+          setValor('resultadoQr', decodedText);
+
+          const datos = parsearQrCedulaChilenaSIGV(decodedText);
+
+          pintarDatosExtraidos(datos);
+
+          setEstado('Código leído correctamente desde imagen.', 'success');
+        })
+        .catch(function(error) {
+          limpiarDatosExtraidos();
+          setValor('resultadoQr', '');
+          setEstado('No se pudo leer el código desde la imagen. Pruebe con una foto más nítida, mejor luz y menos reflejo.', 'error');
+          console.error(error);
+        });
     }
 
-    function detenerScanner() {
-      if (!scanner || !scannerActivo) {
-        setEstado('La cámara no está activa.', 'warning');
+    function mostrarPreviewImagen(archivo) {
+      const preview = document.getElementById('previewImagen');
+
+      if (!preview) {
         return;
       }
 
-      scanner.stop().then(function() {
-        scannerActivo = false;
-        setEstado('Cámara detenida.', 'warning');
-      }).catch(function(error) {
-        setEstado('Error al detener cámara: ' + error, 'error');
-      });
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        preview.innerHTML = '<img src="' + e.target.result + '" alt="Imagen seleccionada" />';
+      };
+
+      reader.readAsDataURL(archivo);
+    }
+
+    function parsearQrCedulaChilenaSIGV(texto) {
+      const resultado = {
+        raw: texto || '',
+        run: '',
+        nombre: '',
+        tipo: '',
+        serie: '',
+        mrz: ''
+      };
+
+      if (!texto) {
+        return resultado;
+      }
+
+      try {
+        const url = new URL(texto);
+
+        resultado.run = url.searchParams.get('RUN') || '';
+        resultado.tipo = url.searchParams.get('type') || '';
+        resultado.serie = url.searchParams.get('serial') || '';
+        resultado.mrz = url.searchParams.get('mrz') || '';
+        resultado.nombre = url.searchParams.get('name') || '';
+
+        resultado.nombre = normalizarNombreDesdeQrSIGV(resultado.nombre);
+
+        return resultado;
+      } catch (error) {
+        // Si no es URL, intentamos rescate básico por texto.
+      }
+
+      resultado.run = extraerParametroTextoSIGV(texto, 'RUN');
+      resultado.tipo = extraerParametroTextoSIGV(texto, 'type');
+      resultado.serie = extraerParametroTextoSIGV(texto, 'serial');
+      resultado.mrz = extraerParametroTextoSIGV(texto, 'mrz');
+      resultado.nombre = normalizarNombreDesdeQrSIGV(extraerParametroTextoSIGV(texto, 'name'));
+
+      return resultado;
+    }
+
+    function extraerParametroTextoSIGV(texto, nombreParametro) {
+      const regex = new RegExp('[?&]' + nombreParametro + '=([^&]+)', 'i');
+      const match = texto.match(regex);
+
+      if (!match || !match[1]) {
+        return '';
+      }
+
+      try {
+        return decodeURIComponent(match[1].replace(/\+/g, ' '));
+      } catch (error) {
+        return match[1];
+      }
+    }
+
+    function normalizarNombreDesdeQrSIGV(nombre) {
+      if (!nombre) {
+        return '';
+      }
+
+      return decodeURIComponent(nombre)
+        .replace(/\+/g, ' ')
+        .replace(/%20/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function pintarDatosExtraidos(datos) {
+      datos = datos || {};
+
+      setTexto('datoRun', datos.run || '-');
+      setTexto('datoNombre', datos.nombre || '-');
+      setTexto('datoTipo', datos.tipo || '-');
+      setTexto('datoSerie', datos.serie || '-');
+    }
+
+    function limpiarDatosExtraidos() {
+      setTexto('datoRun', '-');
+      setTexto('datoNombre', '-');
+      setTexto('datoTipo', '-');
+      setTexto('datoSerie', '-');
     }
 
     function copiarResultado() {
@@ -228,32 +445,28 @@
       }
 
       navigator.clipboard.writeText(texto).then(function() {
-        setEstado('Resultado copiado al portapapeles.', 'success');
+        setEstado('QR raw copiado al portapapeles.', 'success');
       }).catch(function() {
         setEstado('No se pudo copiar automáticamente. Copie el texto manualmente.', 'warning');
       });
     }
 
-        function leerDesdeArchivo() {
-      const input = document.getElementById('archivoQr');
-    
-      if (!input || !input.files || input.files.length === 0) {
-        setEstado('Seleccione una imagen para leer.', 'warning');
-        return;
+    function limpiarTodo() {
+      setValor('resultadoQr', '');
+      limpiarDatosExtraidos();
+
+      const preview = document.getElementById('previewImagen');
+      if (preview) {
+        preview.innerHTML = '<p class="small">La imagen seleccionada aparecerá aquí.</p>';
       }
-    
-      const archivo = input.files[0];
-    
-      const scannerArchivo = new Html5Qrcode('reader');
-    
-      scannerArchivo.scanFile(archivo, true)
-        .then(function(decodedText) {
-          document.getElementById('resultadoQr').value = decodedText;
-          setEstado('Código leído correctamente desde imagen.', 'success');
-        })
-        .catch(function(error) {
-          setEstado('No se pudo leer el código desde la imagen: ' + error, 'error');
-        });
+
+      const inputCamara = document.getElementById('archivoQrCamara');
+      const inputGaleria = document.getElementById('archivoQrGaleria');
+
+      if (inputCamara) inputCamara.value = '';
+      if (inputGaleria) inputGaleria.value = '';
+
+      setEstado('Pendiente de lectura.', 'warning');
     }
   </script>
 </body>
